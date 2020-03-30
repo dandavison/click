@@ -17,12 +17,16 @@ except ImportError:
 WORDBREAK = "="
 
 # Note, only BASH version 4.4 and later have the nosort option.
+# See https://stackoverflow.com/a/12495480/583763
 COMPLETION_SCRIPT_BASH = """
 %(complete_func)s() {
+    local cur
+    _get_comp_words_by_ref -n : cur
     local IFS=$'\n'
     COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \\
                    COMP_CWORD=$COMP_CWORD \\
                    %(autocomplete_var)s=complete $1 ) )
+    __ltrim_colon_completions "$cur"
     return 0
 }
 
